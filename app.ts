@@ -4,6 +4,7 @@ import express from 'express';
 const app = express();
 import routes from './src/routes/api';
 import auth from "./src/routes/auth"
+import api from "./src/routes/api"
 import { AppDataSource } from './src/config/data-source';
 import { DataSource } from 'typeorm';
 import swaggerJsDoc from 'swagger-jsdoc';
@@ -11,7 +12,17 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerOptions from './swagger';
 import chat from './src/routes/chat'
 import cors from "cors";
+import { rateLimit } from 'express-rate-limit'
 
+const limiter = rateLimit({
+	windowMs: 2 * 60 * 1000, 
+	limit: 20, 
+	standardHeaders: 'draft-8',
+	legacyHeaders: false, 
+	
+})
+
+app.use(limiter)
 
 // Middleware setup
 app.use(express.json());
@@ -29,6 +40,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Routes setup
 app.use('/api/auth', auth)
 app.use('/api/chat', chat)
+app.use('/api/certificate', api)
 
 
 // Start server

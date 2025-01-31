@@ -29,7 +29,7 @@ export const register = async (req: Request, res: Response) => {
 
   await userRepo.save(user);
 
-  const token = generateToken({ id: user.id, role: RoleEnum[2] });
+  const token = generateToken({ id: user.id, role: RoleEnum[1] });
 
   return res
     .status(200)
